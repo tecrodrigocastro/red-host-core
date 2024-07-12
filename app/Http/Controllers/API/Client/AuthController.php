@@ -24,13 +24,14 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
+
         if (Auth::guard('client')->attempt($request->only('email', 'password'))) {
             $client = Auth::guard('client')->user();
-            $token = $client->createToken('Personal Access Token')->accessToken;
-            return response()->json(['token' => $token], 200);
+           // $token = $client->createToken('Personal Access Token')->accessToken;
+            return $this->success($client, 'User authenticated successfully', 200);
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return $this->error('Unauthorized', 401);
     }
 
     /**
@@ -61,4 +62,44 @@ class AuthController extends Controller
 
         return response()->json(['token' => $token], 201);
     }
+
+    /**
+     * Handle a logout request to the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function logout(Request $request)
+    {
+        $request->user('client')->token()->revoke();
+        return response()->json(['message' => 'Successfully logged out'], 200);
+    }
+
+    /**
+     * Get the authenticated User.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function user(Request $request): JsonResponse
+    {
+        return response()->json($request->user('client'));
+    }
+
+    /**
+     * Refresh a token.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+
+    public function refresh(Request $request): JsonResponse
+    {
+        $request->user('client')->token()->revoke();
+        $token = $request->user('client')->createToken('Personal Access Token')->accessToken;
+        return response()->json(['token' => $token], 200);
+    }
+
+
+
 }
