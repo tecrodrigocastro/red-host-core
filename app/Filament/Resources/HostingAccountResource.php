@@ -45,7 +45,12 @@ class HostingAccountResource extends Resource
                     ->label('Domínio')
 
                     ->required(),
-                TextInput::make('status')
+                Select::make('status')
+                ->options([
+                    'active' => 'Ativo',
+                    'suspended' => 'Suspenso',
+                    'canceled' => 'Cancelado',
+                ])
 
                     ->required(),
             ]);

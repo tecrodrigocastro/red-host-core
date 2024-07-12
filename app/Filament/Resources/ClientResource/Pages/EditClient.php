@@ -17,4 +17,11 @@ class EditClient extends EditRecord
             Actions\DeleteAction::make(),
         ];
     }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $data['password'] = bcrypt($data['password']);
+
+        return $data;
+    }
 }
