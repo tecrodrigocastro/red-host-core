@@ -67,8 +67,10 @@ class HostingAccountResource extends Resource
                     ->label('Plano')
                     ->sortable(),
                 TextColumn::make('domain')
+                    ->label('Domínio')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->label('Status')
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()

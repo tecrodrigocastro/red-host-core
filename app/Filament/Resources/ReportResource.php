@@ -4,11 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ReportResource\Pages;
 use App\Filament\Resources\ReportResource\RelationManagers;
+use App\Models\Client;
 use App\Models\Report;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,11 +28,23 @@ class ReportResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('client_id')
-                    ->numeric(),
-                Forms\Components\TextInput::make('type')
+                Select::make('client_id')
+                    ->label('Cliente')
+                    ->options(
+                        Client::pluck('name', 'id')
+                    )
                     ->required(),
-                Forms\Components\Textarea::make('data')
+
+                Select::make('type')
+                    ->label('Tipo')
+                    ->options([
+                        'usage' => 'Uso',
+                        'billing' => 'Faturamento',
+                        'support' => 'Suporte',
+                    ])
+                    ->required(),
+                Textarea::make('data')
+                    ->label('Dados')
                     ->required()
                     ->columnSpanFull(),
             ]);
@@ -37,16 +54,18 @@ class ReportResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_id')
-                    ->numeric()
+                TextColumn::make('client.name')
+                ->label('Cliente')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('type')
+                TextColumn::make('type')
+                    ->label('Tipo')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

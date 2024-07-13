@@ -4,11 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\TicketResource\Pages;
 use App\Filament\Resources\TicketResource\RelationManagers;
+use App\Models\Client;
 use App\Models\Ticket;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,15 +28,26 @@ class TicketResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('client_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('subject')
+                Select::make('client_id')
+                    ->label('Cliente')
+                    ->options(
+                        Client::pluck('name', 'id')
+                    )
                     ->required(),
-                Forms\Components\Textarea::make('message')
+                TextInput::make('subject')
+                    ->label('Assunto')
+                    ->required(),
+                Textarea::make('message')
+                    ->label('Mensagem')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('status')
+                Select::make('status')
+                    ->label('Status')
+                    ->options([
+                        'open' => 'Aberto',
+                        'in-progress' => 'Em progresso',
+                        'closed' => 'Fechado',
+                    ])
                     ->required(),
             ]);
     }
@@ -40,18 +56,21 @@ class TicketResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_id')
-                    ->numeric()
+                TextColumn::make('client.name')
+                ->label('Cliente')
+                    ->searchable()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('subject')
+                TextColumn::make('subject')
+                ->label('Assunto')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
+                ->label('Status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

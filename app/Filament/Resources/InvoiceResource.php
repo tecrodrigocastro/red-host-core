@@ -4,11 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\InvoiceResource\Pages;
 use App\Filament\Resources\InvoiceResource\RelationManagers;
+use App\Models\Client;
 use App\Models\Invoice;
+use App\Models\Plan;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -23,16 +28,18 @@ class InvoiceResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('client_id')
+                Select::make('client_id')
+                    ->label('Cliente')
+                    ->options(Client::pluck('name', 'id'))
+                    ->required(),
+                Select::make('plan_id')
+                    ->label('Plano')
+                    ->options(Plan::pluck('name', 'id'))
+                    ->required(),
+                TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('plan_id')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('amount')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('status')
+                TextInput::make('status')
                     ->required(),
             ]);
     }
@@ -41,22 +48,26 @@ class InvoiceResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('client_id')
+                TextColumn::make('client.name')
+                ->label('Cliente')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('plan.name')
+                ->label('Plano')
+                    ->searchable()
+                    ->sortable(),
+                TextColumn::make('amount')
+                    ->label('Valor')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('plan_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('amount')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('status')
+                TextColumn::make('status')
+                    ->label('Status')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
