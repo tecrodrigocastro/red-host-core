@@ -9,6 +9,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
+/**
+ * @OA\Info(
+ *      version="1.0.0",
+ *      title="API Documentation",
+ *      description="API Documentation for the application",
+ * )
+ */
 class AuthController extends Controller
 {
     /**
@@ -16,6 +23,46 @@ class AuthController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/login",
+     *     tags={"Auth"},
+     *     summary="Login client",
+     *     description="Returns the authenticated client data",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"email","password"},
+     *             @OA\Property(property="email", type="string", format="email", example="client@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful login",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="email", type="string", format="email", example="client@example.com"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-07-13T10:12:34.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-07-13T10:12:34.000000Z"),
+     *             ),
+     *             @OA\Property(property="message", type="string", example="User authenticated successfully"),
+     *             @OA\Property(property="status_code", type="integer", example=200),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthorized"),
+     *             @OA\Property(property="status_code", type="integer", example=401),
+     *         )
+     *     )
+     * )
      */
     public function login(Request $request): JsonResponse
     {
