@@ -13,7 +13,10 @@ class CreateClient extends CreateRecord
 
     protected function mutateFormDataBeforeCreate(array $data): array
 {
+    dump($data);
     $data['password'] = bcrypt($data['password']);
+
+    dump($data);
 
     return $data;
 }

@@ -143,11 +143,13 @@ class AuthController extends Controller
             return $this->error($validator->errors(), 400);
         }
 
+        $password = bcrypt($request->password);
+
         $client = Client::create([
             'name' => $request->name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'password' => bcrypt($request->password),
+            'password' => $password,
         ]);
 
         //$token = $client->createToken('Personal Access Token')->accessToken;
