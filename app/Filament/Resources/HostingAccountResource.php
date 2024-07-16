@@ -22,7 +22,10 @@ class HostingAccountResource extends Resource
 {
     protected static ?string $model = HostingAccount::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-signal';
+
+    protected static ?string $modelLabel = 'Hospedagem';
+    protected static ?string $modelLabelPlural = 'Hospedagens';
 
     public static function form(Form $form): Form
     {
