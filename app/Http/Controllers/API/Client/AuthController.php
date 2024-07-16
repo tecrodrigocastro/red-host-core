@@ -74,7 +74,7 @@ class AuthController extends Controller
 
         if (Auth::guard('client')->attempt($request->only('email', 'password'))) {
             $client = Auth::guard('client')->user();
-           // $token = $client->createToken('Personal Access Token')->accessToken;
+            // $token = $client->createToken('Personal Access Token')->accessToken;
             return $this->success($client, 'User authenticated successfully', 200);
         }
 
@@ -87,27 +87,72 @@ class AuthController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     tags={"Auth"},
+     *     summary="Register client",
+     *     description="Registers a new client and returns the client data with an access token",
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"name","email","password","phone"},
+     *             @OA\Property(property="name", type="string", example="John Doe"),
+     *             @OA\Property(property="email", type="string", format="email", example="client@example.com"),
+     *             @OA\Property(property="password", type="string", format="password", example="password"),
+     *             @OA\Property(property="phone", type="string", example="1234567890"),
+     *         ),
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="Successful registration",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="data", type="object",
+     *                 @OA\Property(property="id", type="integer", example=1),
+     *                 @OA\Property(property="name", type="string", example="John Doe"),
+     *                 @OA\Property(property="email", type="string", format="email", example="client@example.com"),
+     *                 @OA\Property(property="phone", type="string", example="1234567890"),
+     *                 @OA\Property(property="created_at", type="string", format="date-time", example="2023-07-13T10:12:34.000000Z"),
+     *                 @OA\Property(property="updated_at", type="string", format="date-time", example="2023-07-13T10:12:34.000000Z"),
+     *             ),
+     *             @OA\Property(property="message", type="string", example="User registered successfully"),
+     *             @OA\Property(property="status_code", type="integer", example=201),
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation Error",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="The given data was invalid."),
+     *             @OA\Property(property="errors", type="object", example={"email": {"The email field is required."}})
+     *         )
+     *     )
+     * )
+     */
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:clients',
             'password' => 'required|string|min:6',
+            'phone' => 'required|string',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return $this->error($validator->errors(), 400);
         }
 
         $client = Client::create([
             'name' => $request->name,
+            'phone' => $request->phone,
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
 
-        $token = $client->createToken('Personal Access Token')->accessToken;
+        //$token = $client->createToken('Personal Access Token')->accessToken;
 
-        return response()->json(['token' => $token], 201);
+        return $this->success($client, 'User registered successfully', 201);
     }
 
     /**
@@ -146,7 +191,4 @@ class AuthController extends Controller
         $token = $request->user('client')->createToken('Personal Access Token')->accessToken;
         return response()->json(['token' => $token], 200);
     }
-
-
-
 }
