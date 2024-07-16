@@ -71,3 +71,13 @@ Para popular o banco de dados com dados de teste, execute:
 ```bash
 php artisan db:seed
 ```
+
+## Documentação da API com Swagger
+Este projeto utiliza `darkaonline/l5-swagger` para gerar a documentação da API.
+
+**Acessar a Documentação**
+A documentação da API estará disponível em:
+```bash
+http://localhost:8000/api/documentation
+```
+
