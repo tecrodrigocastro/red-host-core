@@ -34,6 +34,7 @@ class InvoiceResource extends Resource
                 Select::make('client_id')
                     ->label('Cliente')
                     ->options(Client::pluck('name', 'id'))
+                    ->searchable()
                     ->required(),
                 Select::make('plan_id')
                     ->label('Plano')
