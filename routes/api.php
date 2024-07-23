@@ -33,7 +33,7 @@ Route::prefix('plans')->group(function () {
 });
 
 Route::prefix('invoices')->group(function () {
-    Route::get('/{client_id}', [InvoiceController::class, 'index']);
+    Route::get('/client/{client_id}', [InvoiceController::class, 'index']);
     Route::post('/', [InvoiceController::class, 'store']);
     Route::get('/{id}', [InvoiceController::class, 'show']);
     Route::put('/{id}', [InvoiceController::class, 'update']);

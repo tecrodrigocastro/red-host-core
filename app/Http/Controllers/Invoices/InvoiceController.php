@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Invoices;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 
@@ -11,12 +12,11 @@ class InvoiceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Client $client_id)
     {
-        $invoices = Invoice::where('client_id', $request->only('client_id'))->get();
+        $invoices = Invoice::where('client_id', $client_id->id)->with('plan')->get();
 
         return $this->success($invoices);
-
     }
 
     /**
@@ -32,7 +32,9 @@ class InvoiceController extends Controller
      */
     public function show(Invoice $invoice)
     {
-        //
+        $invoice = Invoice::find($invoice);
+
+        return $this->success($invoice);
     }
 
     /**
