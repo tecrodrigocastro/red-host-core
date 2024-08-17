@@ -43,7 +43,12 @@ class InvoiceResource extends Resource
                 TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                TextInput::make('status')
+                Select::make('status')
+                    ->options([
+                        'pending' => 'Pendente',
+                        'paid' => 'Pago',
+                        'canceled' => 'Cancelado',
+                    ])
                     ->required(),
             ]);
     }
@@ -53,11 +58,11 @@ class InvoiceResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('client.name')
-                ->label('Cliente')
+                    ->label('Cliente')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('plan.name')
-                ->label('Plano')
+                    ->label('Plano')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('amount')
@@ -65,6 +70,17 @@ class InvoiceResource extends Resource
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->badge()
+                    ->color(fn(string $state) => match ($state) {
+                        'pending' => 'warning',
+                        'paid' => 'success',
+                        'cancelled' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state) => match ($state) {
+                        'pending' => 'Pendente',
+                        'paid' => 'Pago',
+                        'cancelled' => 'Cancelado',
+                    })
                     ->label('Status')
                     ->searchable(),
                 TextColumn::make('created_at')

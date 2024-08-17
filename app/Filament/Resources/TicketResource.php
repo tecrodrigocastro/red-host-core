@@ -64,6 +64,17 @@ class TicketResource extends Resource
                 ->label('Assunto')
                     ->searchable(),
                 TextColumn::make('status')
+                ->badge()
+                ->color(fn ($state) => match ($state) {
+                    'open' => 'info',
+                    'in-progress' => 'warning',
+                    'closed' => 'success',
+                })
+                ->formatStateUsing(fn ($state) => match ($state) {
+                    'open' => 'Aberto',
+                    'in-progress' => 'Em progresso',
+                    'closed' => 'Fechado',
+                })
                 ->label('Status')
                     ->searchable(),
                 TextColumn::make('created_at')

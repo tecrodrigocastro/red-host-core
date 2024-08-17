@@ -52,7 +52,7 @@ class HostingAccountResource extends Resource
                 ->options([
                     'active' => 'Ativo',
                     'suspended' => 'Suspenso',
-                    'canceled' => 'Cancelado',
+                    'terminated' => 'Encerrado',
                 ])
 
                     ->required(),
@@ -73,6 +73,17 @@ class HostingAccountResource extends Resource
                     ->label('Domínio')
                     ->searchable(),
                 TextColumn::make('status')
+                    ->badge()
+                    ->color(fn (string $state) => match ($state) {
+                        'active' => 'success',
+                        'suspended' => 'warning',
+                        'terminated' => 'danger',
+                    })
+                    ->formatStateUsing(fn (string $state) => match ($state) {
+                        'active' => 'Ativo',
+                        'suspended' => 'Suspenso',
+                        'terminated' => 'Encerrado',
+                    })
                     ->label('Status')
                     ->searchable(),
                 TextColumn::make('created_at')

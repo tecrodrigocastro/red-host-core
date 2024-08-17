@@ -64,6 +64,13 @@ class ReportResource extends Resource
                     ->sortable(),
                 TextColumn::make('type')
                     ->label('Tipo')
+                    ->formatStateUsing(function ($state) {
+                        return match ($state) {
+                            'usage' => 'Uso',
+                            'billing' => 'Faturamento',
+                            'support' => 'Suporte',
+                        };
+                    })
                     ->searchable(),
                 TextColumn::make('created_at')
                     ->dateTime()

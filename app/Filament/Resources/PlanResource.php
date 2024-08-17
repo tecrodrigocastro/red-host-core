@@ -6,9 +6,12 @@ use App\Filament\Resources\PlanResource\Pages;
 use App\Filament\Resources\PlanResource\RelationManagers;
 use App\Models\Plan;
 use Filament\Forms;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -27,21 +30,27 @@ class PlanResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
+                TextInput::make('name')
+                    ->label('Nome')
                     ->required(),
-                Forms\Components\Textarea::make('description')
+                Textarea::make('description')
+                    ->label('Descrição')
                     ->columnSpanFull(),
-                Forms\Components\TextInput::make('price')
+                TextInput::make('price')
+                    ->label('Preço')
                     ->required()
                     ->numeric()
                     ->prefix('$'),
-                Forms\Components\TextInput::make('disk_space')
+                TextInput::make('disk_space')
+                    ->label('Espaço em Disco')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('bandwidth')
+                TextInput::make('bandwidth')
+                    ->label('Tráfego Mensal')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('email_accounts')
+                TextInput::make('email_accounts')
+                    ->label('Contas de E-mail')
                     ->email()
                     ->required()
                     ->numeric(),
@@ -52,25 +61,30 @@ class PlanResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')
+                TextColumn::make('name')
+                    ->label('Nome')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('price')
+                TextColumn::make('price')
+                    ->label('Preço')
                     ->money()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('disk_space')
+                TextColumn::make('disk_space')
+                    ->label('Espaço em Disco')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('bandwidth')
+                TextColumn::make('bandwidth')
+                    ->label('Tráfego Mensal')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('email_accounts')
+                TextColumn::make('email_accounts')
+                    ->label('Contas de E-mail')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('created_at')
+                TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
+                TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
